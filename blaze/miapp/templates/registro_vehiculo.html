@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Blaze - Registro de Vehículos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'vehiculos.css' %}">
+</head>
+<body>
+
+    <div class="register-container">
+        <h1>Registrar Vehículo</h1>
+
+        {% if messages %}
+        <div class="messages">
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form action="{% url 'registro_vehiculo' %}" method="POST">
+            {% csrf_token %}
+            
+            <input type="text" name="marca" id="marca" class="form-control" placeholder="Marca" required>
+            
+            <input type="text" name="modelo" id="modelo" class="form-control" placeholder="Modelo" required>
+            
+            <input type="number" name="año" id="año" class="form-control" placeholder="Año" min="1900" max="{{ current_year }}" value="{{ current_year }}" required>
+            
+            <input type="text" name="color" id="color" class="form-control" placeholder="Color" required>
+
+            <input type="text" name="patente" id="patente" class="form-control" placeholder="Patente" required>
+            
+            <button type="submit" class="btn">Registrar Vehículo</button>
+        </form>
+    </div>
+
+</body>
+</html>
+

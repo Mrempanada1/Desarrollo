@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Blaze - Taller Automotriz</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">Blaze</div>
+            <div>
+                <a href="#servicios">Servicios</a>
+                <a href="#contacto">Contacto</a>
+                <a href="/login" class="btn">Iniciar Sesión</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="banner">
+        <h1>Bienvenido a Blaze</h1>
+        <p>Optimiza la gestión de tu taller automotriz</p>
+        <a href="/registro" class="btn">Comienza Ahora</a>
+    </div>
+
+    <div class="section" id="servicios">
+        <div class="card">
+            <h2>Gestión de Órdenes</h2>
+            <p>Crea y sigue órdenes de trabajo fácilmente.</p>
+        </div>
+        <div class="card">
+            <h2>Seguimiento de Vehículos</h2>
+            <p>Mantén un registro completo de cada vehículo.</p>
+        </div>
+        <div class="card">
+            <h2>Reportes y Estadísticas</h2>
+            <p>Genera reportes para analizar tu rendimiento.</p>
+        </div>
+        <div class="card">
+            <h2>Notificaciones Automáticas</h2>
+            <p>Informa a tus clientes sobre el estado de su vehículo.</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        &copy; 2024 Blaze. Todos los derechos reservados.
+    </footer>
+
+</body>
+</html>

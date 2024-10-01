@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Blaze - Iniciar Sesión</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Iniciar Sesión</h1>
+        <form action="/dashboard"method="post">
+            {% csrf_token %}
+            <input type="text" name="username" class="form-control" placeholder="Usuario" required>
+            <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
+            <button type="submit">Iniciar sesión</button>
+        </form>
+        <div class="extra-options">
+        {% if error %}
+            <p>{{ error }}</p>
+        {% endif %}
+            <p>¿Olvidaste tu contraseña? <a href="/recuperar tu contraseña">Recupérala aquí</a></p>
+            <p>¿No tienes una cuenta? <a href="{% url 'register' %}">Regístrate aquí</a>.</p>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Blaze - Registro de Clientes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'clientes.css' %}">
+</head>
+<body>
+
+    <div class="register-container">
+        <h1>Registro de Clientes</h1>
+
+        {% if messages %}
+        <div class="messages">
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form action="{% url 'register' %}" method="POST">
+            {% csrf_token %}
+
+            <input type="text" name="username" id="username" class="form-control" placeholder="Nombre de usuario" required maxlength="150" pattern="[A-Za-z0-9@._+-]*">
+            <small>Requerido. 150 caracteres o menos. Letras, dígitos y @/./+/-/_ solamente.</small>
+
+            <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña" required>
+            <small>Debe contener al menos 8 caracteres, no ser similar a tus datos personales, ni ser común o completamente numérica.</small>
+
+            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirmación de contraseña" required>
+            <small>Ingresa la misma contraseña para verificación.</small>
+
+            <button type="submit" class="btn">Iniciar sesion</button>
+        </form>
+    </div>
+
+</body>
+</html>
+
