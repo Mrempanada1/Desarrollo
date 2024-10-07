@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <h2>Editar Pago</h2>
+  <form method="post" action="{% url 'editar_pago' pago.id %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="monto">Monto</label>
+      {{ form.monto|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      <label for="metodo_pago">Método de Pago</label>
+      {{ form.metodo_pago|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      <label for="fecha_pago">Fecha de Pago</label>
+      {{ form.fecha_pago|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      <label for="estado_pago">Estado del Pago</label>
+      {{ form.estado_pago|as_crispy_field }}
+    </div>
+    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+  </form>
+</div>
+{% endblock %}
