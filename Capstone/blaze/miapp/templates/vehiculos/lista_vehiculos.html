@@ -1,0 +1,50 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <h2>Lista de Vehículos</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Patente</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Año</th>
+        <th>Color</th>
+        <th>Kilometraje</th>
+        <th>Tipo de Combustible</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for vehiculo in vehiculos %}
+      <tr>
+        <td>{{ vehiculo.id_vehiculo }}</td>
+        <td>{{ vehiculo.patente }}</td>
+        <td>{{ vehiculo.marca }}</td>
+        <td>{{ vehiculo.modelo }}</td>
+        <td>{{ vehiculo.año }}</td>
+        <td>{{ vehiculo.color }}</td>
+        <td>{{ vehiculo.kilometraje }}</td>
+        <td>{{ vehiculo.tipo_combustible }}</td>
+        <td>
+          <a
+            href="{% url 'editar_vehiculo' vehiculo.id_vehiculo %}"
+            class="btn btn-warning btn-sm"
+            >Editar</a
+          >
+          <a
+            href="{% url 'eliminar_vehiculo' vehiculo.id_vehiculo %}"
+            class="btn btn-danger btn-sm"
+            >Eliminar</a
+          >
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="9" class="text-center">No hay vehículos registrados.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

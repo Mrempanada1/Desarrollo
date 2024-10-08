@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <h2>Registrar Cita</h2>
+  <form method="post" action="{% url 'registrar_cita' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="vehiculo">Vehículo</label>
+      {{ form.vehiculo|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      <label for="fecha_y_hora">Fecha y Hora</label>
+      {{ form.fecha_y_hora|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      <label for="motivo">Motivo</label>
+      {{ form.motivo|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      <label for="ubicacion">Ubicación</label>
+      {{ form.ubicacion|as_crispy_field }}
+    </div>
+    <button type="submit" class="btn btn-primary">Registrar Cita</button>
+  </form>
+</div>
+{% endblock %}

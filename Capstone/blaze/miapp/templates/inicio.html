@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {% block title %}Página Principal{% endblock %}
+{%block content %}
+<div class="container mt-5 text-center">
+  <h1>Bienvenido al Taller Automotriz Blaze</h1>
+  <p>Gestione sus vehículos y servicios de manera eficiente.</p>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Vehículos</h5>
+          <p class="card-text">Registre, edite y consulte vehículos.</p>
+          <a href="{% url 'lista_vehiculos' %}" class="btn btn-primary"
+            >Ir a Vehículos</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Dueños</h5>
+          <p class="card-text">
+            Gestione la información de los dueños de los vehículos.
+          </p>
+          <a href="{% url 'lista_dueños' %}" class="btn btn-primary"
+            >Ir a Dueños</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Citas</h5>
+          <p class="card-text">
+            Programe y administre citas para reparaciones.
+          </p>
+          <a href="{% url 'lista_citas' %}" class="btn btn-primary"
+            >Ir a Citas</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Pagos</h5>
+          <p class="card-text">Registre y administre los pagos realizados.</p>
+          <a href="{% url 'lista_pagos' %}" class="btn btn-primary"
+            >Ir a Pagos</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
