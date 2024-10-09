@@ -1,0 +1,48 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <h2>Lista de Reparaciones</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descripción del Problema</th>
+        <th>Fecha de Ingreso</th>
+        <th>Fecha Estimada de Fin</th>
+        <th>Costo Estimado</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for reparacion in reparaciones %}
+      <tr>
+        <td>{{ reparacion.id_reparacion }}</td>
+        <td>{{ reparacion.desc_problema }}</td>
+        <td>{{ reparacion.fecha_ingreso }}</td>
+        <td>{{ reparacion.fecha_estimada_fin }}</td>
+        <td>{{ reparacion.costo_estimado }}</td>
+        <td>{{ reparacion.estado_reparacion }}</td>
+        <td>
+          <a
+            href="{% url 'editar_reparacion' reparacion.id_reparacion %}"
+            class="btn btn-warning btn-sm"
+            >Editar</a
+          >
+          <a
+            href="{% url 'eliminar_reparacion' reparacion.id_reparacion %}"
+            class="btn btn-danger btn-sm"
+            >Eliminar</a
+          >
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="text-center">
+          No hay reparaciones registradas.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

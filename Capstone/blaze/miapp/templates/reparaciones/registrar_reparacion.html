@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %}{% block content %}
+<div class="container mt-5">
+  <h2>Registrar Reparación</h2>
+  <form method="post" action="{% url 'registro_reparacion' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      {{ form.desc_problema|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      {{ form.fecha_ingreso|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      {{ form.fecha_estimada_fin|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      {{ form.costo_estimado|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      {{ form.estado_reparacion|as_crispy_field }}
+    </div>
+    <button type="submit" class="btn btn-primary">Registrar Reparación</button>
+  </form>
+</div>
+{% endblock %}
