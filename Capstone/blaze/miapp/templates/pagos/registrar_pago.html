@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %}{% block content %}
+<div class="container mt-5">
+  <h2>Registrar Pago</h2>
+  <form method="post" action="{% url 'registro_pago' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      {{ form.monto|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      {{ form.metodo_pago|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      {{ form.fecha_pago|as_crispy_field }}
+    </div>
+    <div class="form-group">
+      {{ form.estado_pago|as_crispy_field }}
+    </div>
+    <button type="submit" class="btn btn-primary">Registrar Pago</button>
+  </form>
+</div>
+{% endblock %}
