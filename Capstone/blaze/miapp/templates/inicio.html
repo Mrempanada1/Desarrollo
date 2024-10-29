@@ -1,0 +1,95 @@
+{% extends 'base.html' %} {% block title %}Taller Automotriz Blaze{% endblock %}
+{% block content %}
+<div class="container mt-5 text-center">
+  <h1>Bienvenido al Taller Automotriz Blaze</h1>
+  <p>Gestione sus vehículos y servicios de manera eficiente.</p>
+
+  <div class="row">
+    {% if user.groups.filter(name="Dueño").exists %}
+    <!-- Opciones para Dueño -->
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Vehículos</h5>
+          <a href="{% url 'lista_vehiculos' %}" class="btn btn-primary"
+            >Consultar Vehículos</a
+          >
+        </div>
+      </div>
+    </div>
+    <!-- Agregar otras opciones específicas para Dueño -->
+    {% endif %} {% if user.groups.filter(name='Administrador').exists %}
+    <!-- Opciones para Administrador -->
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Trabajadores</h5>
+          <a href="{% url 'lista_trabajadores' %}" class="btn btn-primary"
+            >Consultar Trabajadores</a
+          >
+        </div>
+      </div>
+    </div>
+    <!-- Agregar otras opciones específicas para Administrador -->
+    {% endif %} {% if user.groups.filter(name='Trabajador').exists %}
+    <!-- Opciones para Trabajador -->
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Procesos</h5>
+          <a href="{% url 'registro_proceso' %}" class="btn btn-primary"
+            >Registrar Proceso</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endif %} {% if user.groups.filter(name='Supervisor').exists %}
+    <!-- Opciones para Supervisor -->
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Supervisar Procesos</h5>
+          <a href="{% url 'lista_procesos' %}" class="btn btn-primary"
+            >Consultar Procesos</a
+          >
+        </div>
+      </div>
+    </div>
+    <!-- Agregar otras opciones específicas para Supervisor -->
+    {% endif %}
+
+    <!-- Dashboard visible solo para Trabajador, Supervisor, Administrador -->
+    {% if user.groups.filter|any('Trabajador', 'Supervisor',
+    'Administrador').exists %}
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Cotizaciones Pendientes</h5>
+            <p class="card-text">
+              {{ cotizaciones_pendientes.count|default:"0" }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Órdenes Activas</h5>
+            <p class="card-text">{{ ordenes_activas.count|default:"0" }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Órdenes Pendientes</h5>
+            <p class="card-text">{{ ordenes_pendientes.count|default:"0" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
