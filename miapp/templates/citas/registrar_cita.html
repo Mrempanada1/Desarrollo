@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
+<div class="container mt-5">
+  <h2>Registrar Cita</h2>
+  <form method="post" action="{% url 'registro_cita' %}">
+    {% csrf_token %}
+    <div class="form-group">{{ form.vehiculo|as_crispy_field }}</div>
+    <div class="form-group">{{ form.fecha_y_hora|as_crispy_field }}</div>
+    <div class="form-group">{{ form.motivo|as_crispy_field }}</div>
+    <button type="submit" class="btn btn-primary">Registrar</button>
+  </form>
+</div>
+<!-- Calendario -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr("#id_fecha_y_hora", {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i",
+    time_24hr: true,
+    locale: "es",
+  });
+</script>
+{% endblock %}
