@@ -6,9 +6,9 @@ from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.contrib.auth import logout
-from .models import User, ClienteProfile, EmployeeProfile
-from .forms import ClienteForm, EmployeeForm, ClienteUpdateForm, EmployeeUpdateForm
-from .forms import ClienteForm, EmployeeForm
+from .models import User, DuenoProfile, TrabajadorProfile, SupervisorProfile
+from .forms import DueñoForm, TrabajadorForm, SupervisorForm
+from .forms import DueñoUpdateForm, TrabajadorUpdateForm, SupervisorUpdateForm
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.contrib.sites.shortcuts import get_current_site
@@ -47,10 +47,12 @@ class UserListView(BaseUserView, ListView):
             'user_type') or self.extra_context.get('user_type', 'all')
         print(f"User type: {user_type}")
 
-        if user_type == 'clients':
-            queryset = queryset.filter(role='client')
-        elif user_type == 'employees':
-            queryset = queryset.filter(role='employee')
+        if user_type == 'owner':
+            queryset = queryset.filter(role='Dueño')
+        elif user_type == 'worker':
+            queryset = queryset.filter(role='Trabajador')
+        elif user_type == 'supervisor':
+            queryset = queryset.filter(role='Supervisor')
 
         print(f"Query count: {queryset.count()}")
         return queryset.order_by('-date_joined')
@@ -63,7 +65,7 @@ class UserListView(BaseUserView, ListView):
         context.update({
             'user_type': user_type,
             'search_query': self.request.GET.get('search', ''),
-            'title': 'Clientes' if user_type == 'clients' else 'Empleados'
+            'title': 'Dueño' if user_type == 'owner' else ('Trabajador' if user_type == 'worker' else 'Supervisor'),
         })
         print(f"Context: {context}")
         return context
@@ -76,23 +78,30 @@ class UserCreateView(BaseUserView, CreateView):
     def get_success_url(self):
         user_type = self.kwargs.get(
             'user_type') or self.extra_context.get('user_type')
-        if user_type == 'client':
-            return reverse_lazy('users:client_list')
-        elif user_type == 'employee':
-            return reverse_lazy('users:employee_list')
-        return reverse_lazy('users:user_list')  # fallback
+        if user_type == 'owner':
+            return reverse_lazy('users:owner_list')
+        elif user_type == 'worker':
+            return reverse_lazy('users:worker_list')
+        elif user_type == 'supervisor':
+            return reverse_lazy('users:supervisor_list')
+        return reverse_lazy('users:user_list')
 
     def get_form_class(self):
         user_type = self.kwargs.get(
             'user_type') or self.extra_context.get('user_type')
-        return ClienteForm if user_type == 'client' else EmployeeForm
+        if user_type == 'owner':
+            return DueñoForm
+        elif user_type == 'worker':
+            return TrabajadorForm
+        elif user_type == 'supervisor':
+            return SupervisorForm
 
     def form_valid(self, form):
         try:
             user = form.save(commit=False)
             user_type = self.kwargs.get(
                 'user_type') or self.extra_context.get('user_type')
-            user.role = 'client' if user_type == 'client' else 'employee'
+            user.role = 'worker' if user_type == 'owner' else 'worker'
             user.is_active = False
             user.verification_token = get_random_string(32)
             user.save()  # Guardamos primero el usuario
@@ -117,7 +126,7 @@ class UserCreateView(BaseUserView, CreateView):
 
             messages.success(
                 self.request,
-                f'{"Cliente" if user_type == "client" else "Empleado"} {
+                f'{"Dueño" if user_type == "owner" else "Trabajador"} {
                     user.get_full_name()} creado exitosamente.'
             )
             return super().form_valid(form)
@@ -130,10 +139,10 @@ class UserCreateView(BaseUserView, CreateView):
         user_type = self.kwargs.get(
             'user_type') or self.extra_context.get('user_type')
         context.update({
-            'title': 'Crear Cliente' if user_type == 'client' else 'Crear Empleado',
+            'title': 'Crear dueño' if user_type == 'owner' else 'Crear trabajador',
             'is_update': False,
             'user_type': user_type,  # Agregamos user_type al contexto
-            'cancel_url': reverse_lazy(f'users:{"client" if user_type == "client" else "employee"}_list')
+            'cancel_url': reverse_lazy(f'users:{"owner" if user_type == "owner" else "worker"}_list')
         })
         return context
 
@@ -149,10 +158,12 @@ class UserUpdateView(BaseUserView, UpdateView):
 
     def get_form_class(self):
         user = self.get_object()
-
-        return ClienteUpdateForm if user.is_client else EmployeeUpdateForm
-
-        return ClienteForm if user.is_client else EmployeeForm
+        if user.role == 'Dueño':
+            return DueñoUpdateForm
+        elif user.role == 'Trabajador':
+            return TrabajadorUpdateForm
+        elif user.role == 'Supervisor':
+            return SupervisorUpdateForm
 
     def form_valid(self, form):
         try:
@@ -172,7 +183,7 @@ class UserUpdateView(BaseUserView, UpdateView):
         user_type = self.kwargs.get(
             'user_type') or self.extra_context.get('user_type')
         context.update({
-            'title': f'Actualizar {"Cliente" if user_type == "client" else "Empleado"}',
+            'title': f'Actualizar {"Dueño" if user_type == "owner" else "Trabajador"}',
             'is_update': True,
             'cancel_url': reverse_lazy(f'users:{user_type}_list')
         })
@@ -190,7 +201,7 @@ class UserDetailView(BaseUserView, DetailView):
         user_type = self.kwargs.get(
             'user_type') or self.extra_context.get('user_type')
         context.update({
-            'profile': user.cliente_profile if user.is_client else user.employee_profile,
+            'profile': user.dueno_profile if user.role == 'Dueño' else user.trabajador_profile if user.role == 'Trabajador' else user.supervisor_profile,
             'back_url': reverse_lazy(f'users:{user_type}_list')
         })
         return context
@@ -215,16 +226,24 @@ def user_form_view(request, pk=None):
 
     if user:
         # Actualización
-        if user.is_client:
-            form_class = ClienteUpdateForm
+        if user.is_owner:
+            form_class = DueñoUpdateForm
+        elif user.is_worker:
+            form_class = TrabajadorUpdateForm
+        elif user.is_supervisor:
+            form_class = SupervisorUpdateForm
         else:
-            form_class = EmployeeUpdateForm
+            form_class = None
     else:
         # Creación
-        if request.GET.get('type') == 'client':
-            form_class = ClienteForm
+        if request.GET.get('type') == 'owner':
+            form_class = DueñoForm
+        elif request.GET.get('type') == 'worker':
+            form_class = TrabajadorForm
+        elif request.GET.get('type') == 'supervisor':
+            form_class = SupervisorForm
         else:
-            form_class = EmployeeForm
+            form_class = None
 
     if request.method == 'POST':
         form = form_class(request.POST, instance=user)
